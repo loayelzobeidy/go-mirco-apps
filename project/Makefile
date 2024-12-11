@@ -1,9 +1,9 @@
 FRONT_END_BINARY=frontApp
-brocker_BINARY=brockerApp
+BROCKER_BINARY=brockerApp
 AUTH_BINARY=authApp
 LOGGER_BINARY=loggerApp
 MAIL_BINARY=mailerApp
-
+LISTENER_BINARY=listenerApp
 ## up: starts all containers in the background without forcing build
 up:
 	@echo "Starting Docker images..."
@@ -11,7 +11,7 @@ up:
 	@echo "Docker images started!"
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-up_build: build_brocker
+up_build: build_brocker build_auth build_logger build_mailer build_listener
 	@echo "Stopping docker images (if running...)"
 	docker-compose down
 	@echo "Building (when required) and starting docker images..."
@@ -27,12 +27,17 @@ down:
 ## build_brocker: builds the brocker binary as a linux executable
 build_brocker:
 	@echo "Building brocker binary..."
-	cd ../brocker-service && env GOOS=linux CGO_ENABLED=0 go build -o ${brocker_BINARY} ./cmd/api
+	cd ../brocker-service && env GOOS=linux CGO_ENABLED=0 go build -o ${BROCKER_BINARY} ./cmd/api
 	@echo "Done!"
 
 build_logger:
 	@echo "Building logger binary..."
-	cd ../logger-service && env GOOS=linux CGO_ENABLED=0 go build -o ${Logger_BINARY} ./cmd/api
+	cd ../logger-service && env GOOS=linux CGO_ENABLED=0 go build -o ${LOGGER_BINARY} ./cmd/api
+	@echo "Done!"
+
+build_listener:
+	@echo "Building listener binary..."
+	cd ../listener-service && env GOOS=linux CGO_ENABLED=0 go build -o ${LISTENER_BINARY} ./
 	@echo "Done!"
 
 build_auth:
