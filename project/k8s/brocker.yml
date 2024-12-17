@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brocker-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: brocker-service
+  template:
+    metadata:
+      labels:
+        app: brocker-service
+    spec:
+      containers:
+      - name: brocker-service
+        image: "lelzobaidy/brocker-service:1.0.0"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: brocker-service
+spec:
+  selector:
+    app: brocker-service
+  ports:
+    - protocol: TCP
+      name: main-port
+      port: 80
+      targetPort: 80
